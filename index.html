@@ -1,0 +1,1224 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гримуар Механических Знаний</title>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=IM+Fell+English:ital@0;1&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --parchment: #f4e4bc;
+            --parchment-dark: #d4b483;
+            --parchment-deep: #c49a5a;
+            --ink: #1a0f00;
+            --ink-light: #3d2200;
+            --blood: #8b1a1a;
+            --gold: #c8982a;
+            --gold-light: #e8c060;
+            --gold-bright: #ffd700;
+            --ember: #ff6b00;
+            --mystic: #4a0080;
+            --mystic-light: #7b2fbe;
+            --mystic-glow: #c084fc;
+            --shadow: rgba(0,0,0,0.8);
+            --rune-blue: #1e3a5f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #0d0500;
+            color: var(--ink);
+            font-family: 'IM Fell English', serif;
+            overflow-x: hidden;
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext y='24' font-size='24'%3E✦%3C/text%3E%3C/svg%3E"), auto;
+        }
+
+        /* ── MAGIC PARTICLES ── */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .spark {
+            position: absolute;
+            border-radius: 50%;
+            animation: float-up linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translateY(-10vh) translateX(var(--dx)) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* ── HEADER / BOOK COVER ── */
+        .grimoire-cover {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at 20% 80%, rgba(139,26,26,0.3) 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, rgba(74,0,128,0.4) 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(200,152,42,0.1) 0%, transparent 70%), linear-gradient(180deg, #0d0500 0%, #1a0a00 40%, #0d0500 100%);
+            z-index: 1;
+            padding: 40px 20px;
+        }
+
+        .cover-border {
+            position: relative;
+            border: 3px solid var(--gold);
+            padding: 60px 80px;
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(200,152,42,0.3), 0 0 80px rgba(200,152,42,0.1), inset 0 0 40px rgba(0,0,0,0.5);
+        }
+
+            .cover-border::before, .cover-border::after {
+                content: '';
+                position: absolute;
+                border: 1px solid rgba(200,152,42,0.4);
+            }
+
+            .cover-border::before {
+                inset: 8px;
+            }
+
+            .cover-border::after {
+                inset: 16px;
+                border-color: rgba(200,152,42,0.2);
+            }
+
+        /* Corner ornaments */
+        .corner {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            font-size: 50px;
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .corner-tl {
+            top: -5px;
+            left: -5px;
+        }
+
+        .corner-tr {
+            top: -5px;
+            right: -5px;
+            transform: scaleX(-1);
+        }
+
+        .corner-bl {
+            bottom: -5px;
+            left: -5px;
+            transform: scaleY(-1);
+        }
+
+        .corner-br {
+            bottom: -5px;
+            right: -5px;
+            transform: scale(-1);
+        }
+
+        .grimoire-title {
+            font-family: 'UnifrakturMaguntia', cursive;
+            font-size: clamp(40px, 7vw, 90px);
+            color: var(--gold-light);
+            text-shadow: 0 0 20px rgba(200,152,42,0.8), 0 0 60px rgba(200,152,42,0.4), 2px 2px 0 var(--blood);
+            line-height: 1.1;
+            margin-bottom: 10px;
+            animation: title-glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes title-glow {
+            from {
+                text-shadow: 0 0 20px rgba(200,152,42,0.8), 0 0 60px rgba(200,152,42,0.4), 2px 2px 0 var(--blood);
+            }
+
+            to {
+                text-shadow: 0 0 40px rgba(232,192,96,1), 0 0 100px rgba(200,152,42,0.6), 2px 2px 0 var(--blood), 0 0 200px rgba(255,100,0,0.2);
+            }
+        }
+
+        .grimoire-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(12px, 2vw, 18px);
+            color: var(--parchment-dark);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        .rune-divider {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold);
+            font-size: 28px;
+            letter-spacing: 8px;
+            margin: 20px 0;
+            opacity: 0.8;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%,100% {
+                opacity: 0.6
+            }
+
+            50% {
+                opacity: 1
+            }
+        }
+
+        .cover-text {
+            font-size: 16px;
+            color: var(--parchment-dark);
+            line-height: 1.8;
+            font-style: italic;
+            max-width: 500px;
+            margin: 0 auto 40px;
+        }
+
+        .scroll-down-btn {
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 12px 40px;
+            cursor: pointer;
+            background: transparent;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .scroll-down-btn::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, rgba(200,152,42,0.2), transparent);
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            .scroll-down-btn:hover::before {
+                transform: translateX(0);
+            }
+
+            .scroll-down-btn:hover {
+                color: var(--gold-bright);
+                box-shadow: 0 0 20px rgba(200,152,42,0.5), inset 0 0 20px rgba(200,152,42,0.1);
+                border-color: var(--gold-bright);
+            }
+
+        /* Floating sigils */
+        .sigil {
+            position: absolute;
+            font-size: 40px;
+            color: var(--gold);
+            opacity: 0.15;
+            animation: sigil-float 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes sigil-float {
+            0%,100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.1;
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+                opacity: 0.25;
+            }
+        }
+
+        /* ── NAVIGATION SCROLL ── */
+        .nav-scroll {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: linear-gradient(180deg, rgba(13,5,0,0.98), rgba(26,10,0,0.98));
+            border-bottom: 1px solid rgba(200,152,42,0.4);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+        }
+
+        .nav-item {
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            color: var(--parchment-dark);
+            padding: 14px 16px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: none;
+            background: transparent;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+            .nav-item:hover, .nav-item.active {
+                color: var(--gold-light);
+                border-bottom-color: var(--gold);
+            }
+
+        /* ── MAIN CONTENT ── */
+        .grimoire-pages {
+            position: relative;
+            z-index: 2;
+            background: #0d0500;
+        }
+
+        /* ── CHAPTER HEADER ── */
+        .chapter {
+            padding: 80px 20px 60px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .chapter-header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .chapter-number {
+            font-family: 'UnifrakturMaguntia', cursive;
+            font-size: 80px;
+            color: var(--blood);
+            opacity: 0.25;
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        .chapter-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(22px, 4vw, 42px);
+            color: var(--gold-light);
+            text-shadow: 0 0 30px rgba(200,152,42,0.5), 0 2px 4px rgba(0,0,0,0.8);
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .chapter-sub {
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            color: var(--parchment-dark);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        /* ── PARCHMENT CARDS ── */
+        .parchment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .tome-card {
+            position: relative;
+            background: radial-gradient(ellipse at 30% 20%, rgba(255,255,200,0.08) 0%, transparent 60%), linear-gradient(135deg, #2a1800 0%, #1a0e00 50%, #221200 100%);
+            border: 1px solid rgba(200,152,42,0.35);
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.4s;
+            overflow: hidden;
+        }
+
+            .tome-card::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, rgba(200,152,42,0.05) 0%, transparent 60%);
+                opacity: 0;
+                transition: opacity 0.4s;
+            }
+
+            .tome-card:hover {
+                border-color: rgba(200,152,42,0.7);
+                transform: translateY(-4px);
+                box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 20px rgba(200,152,42,0.15);
+            }
+
+                .tome-card:hover::before {
+                    opacity: 1;
+                }
+
+            .tome-card::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 1px;
+                background: linear-gradient(90deg, transparent, var(--gold), transparent);
+                opacity: 0;
+                transition: opacity 0.4s;
+            }
+
+            .tome-card:hover::after {
+                opacity: 1;
+            }
+
+        .card-number {
+            font-family: 'UnifrakturMaguntia', cursive;
+            font-size: 48px;
+            color: var(--blood);
+            opacity: 0.4;
+            line-height: 1;
+            margin-bottom: -10px;
+        }
+
+        .card-title {
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            color: var(--gold-light);
+            line-height: 1.5;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .card-rune {
+            font-size: 28px;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 0 8px rgba(200,152,42,0.6));
+        }
+
+        .card-excerpt {
+            font-size: 13px;
+            color: rgba(212,180,131,0.7);
+            line-height: 1.6;
+            font-style: italic;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-open-btn {
+            margin-top: 16px;
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            color: var(--gold);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            opacity: 0;
+            transform: translateY(4px);
+            transition: all 0.3s;
+        }
+
+        .tome-card:hover .card-open-btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── SCROLL / MODAL ── */
+        .scroll-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+            .scroll-overlay.open {
+                display: flex;
+                animation: fade-in 0.3s ease;
+            }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: scale(0.95)
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1)
+            }
+        }
+
+        .scroll-content {
+            position: relative;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: radial-gradient(ellipse at 50% 0%, rgba(255,240,180,0.12) 0%, transparent 60%), linear-gradient(180deg, #2a1800 0%, #1e1000 30%, #1a0e00 70%, #2a1800 100%);
+            border: 2px solid var(--gold);
+            padding: 50px 60px;
+            box-shadow: 0 0 60px rgba(200,152,42,0.3), 0 0 120px rgba(0,0,0,0.8), inset 0 0 60px rgba(0,0,0,0.3);
+        }
+
+            .scroll-content::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            }
+
+            .scroll-content::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            }
+
+        .scroll-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 28px;
+            color: var(--gold);
+            cursor: pointer;
+            background: none;
+            border: none;
+            line-height: 1;
+            transition: all 0.2s;
+            font-family: 'Cinzel', serif;
+        }
+
+            .scroll-close:hover {
+                color: var(--gold-bright);
+                transform: rotate(90deg);
+            }
+
+        .scroll-q-num {
+            font-family: 'UnifrakturMaguntia', cursive;
+            font-size: 56px;
+            color: var(--blood);
+            opacity: 0.35;
+            line-height: 1;
+        }
+
+        .scroll-q-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(16px, 2.5vw, 24px);
+            color: var(--gold-light);
+            margin: 8px 0 24px;
+            line-height: 1.4;
+            text-shadow: 0 0 20px rgba(200,152,42,0.4);
+        }
+
+        .scroll-divider {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(200,152,42,0.5), transparent);
+            margin: 20px 0;
+        }
+
+        .scroll-answer {
+            font-size: 15px;
+            color: var(--parchment);
+            line-height: 1.9;
+        }
+
+            .scroll-answer p {
+                margin-bottom: 14px;
+            }
+
+            .scroll-answer strong {
+                color: var(--gold-light);
+                font-family: 'Cinzel', serif;
+                font-size: 13px;
+                font-style: normal;
+            }
+
+            .scroll-answer ul {
+                padding-left: 24px;
+                margin-bottom: 14px;
+            }
+
+            .scroll-answer li {
+                margin-bottom: 8px;
+            }
+
+                .scroll-answer li::marker {
+                    color: var(--gold);
+                }
+
+        .scroll-nav {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .scroll-nav-btn {
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            color: var(--gold);
+            border: 1px solid rgba(200,152,42,0.4);
+            padding: 10px 24px;
+            cursor: pointer;
+            background: transparent;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+            .scroll-nav-btn:hover {
+                background: rgba(200,152,42,0.1);
+                border-color: var(--gold);
+                box-shadow: 0 0 12px rgba(200,152,42,0.3);
+            }
+
+        /* ── SEARCH GRIMOIRE ── */
+        .search-section {
+            padding: 60px 20px;
+            background: linear-gradient(180deg, transparent, rgba(139,26,26,0.05), transparent);
+            border-top: 1px solid rgba(200,152,42,0.15);
+            border-bottom: 1px solid rgba(200,152,42,0.15);
+            margin-bottom: 60px;
+        }
+
+        .search-inner {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .search-label {
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            color: var(--parchment-dark);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            opacity: 0.6;
+        }
+
+        .search-vessel {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+            .search-vessel input {
+                width: 100%;
+                background: rgba(42,24,0,0.8);
+                border: 1px solid rgba(200,152,42,0.4);
+                border-radius: 0;
+                padding: 16px 60px 16px 20px;
+                font-family: 'IM Fell English', serif;
+                font-size: 16px;
+                color: var(--parchment);
+                outline: none;
+                transition: all 0.3s;
+            }
+
+                .search-vessel input::placeholder {
+                    color: rgba(212,180,131,0.4);
+                    font-style: italic;
+                }
+
+                .search-vessel input:focus {
+                    border-color: var(--gold);
+                    box-shadow: 0 0 20px rgba(200,152,42,0.2);
+                    background: rgba(42,24,0,0.95);
+                }
+
+        .search-icon {
+            position: absolute;
+            right: 16px;
+            color: var(--gold);
+            font-size: 22px;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* ── CATEGORIES / TOMES ── */
+        .tome-sections {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 60px 0 30px;
+        }
+
+            .section-divider::before, .section-divider::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: linear-gradient(90deg, transparent, rgba(200,152,42,0.4));
+            }
+
+            .section-divider::after {
+                background: linear-gradient(270deg, transparent, rgba(200,152,42,0.4));
+            }
+
+        .section-name {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 16px;
+            color: var(--gold);
+            white-space: nowrap;
+            letter-spacing: 3px;
+        }
+
+        /* ── CANDLE EFFECT ── */
+        .candle-row {
+            display: flex;
+            justify-content: space-around;
+            padding: 40px 0;
+            pointer-events: none;
+        }
+
+        .candle {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .candle-flame {
+            width: 12px;
+            height: 24px;
+            background: linear-gradient(180deg, #fff8e7, #ffd700, #ff6b00, transparent);
+            border-radius: 50% 50% 30% 30%;
+            animation: flicker 1.5s ease-in-out infinite alternate;
+            box-shadow: 0 0 10px 4px rgba(255,150,0,0.4), 0 0 30px rgba(255,150,0,0.2);
+        }
+
+        @keyframes flicker {
+            0% {
+                transform: scaleX(1) scaleY(1) rotate(-2deg);
+                opacity: 0.9;
+            }
+
+            25% {
+                transform: scaleX(1.1) scaleY(0.95) rotate(1deg);
+            }
+
+            50% {
+                transform: scaleX(0.9) scaleY(1.05) rotate(-1deg);
+            }
+
+            75% {
+                transform: scaleX(1.05) scaleY(0.98) rotate(2deg);
+            }
+
+            100% {
+                transform: scaleX(1) scaleY(1) rotate(-1deg);
+                opacity: 1;
+            }
+        }
+
+        .candle-body {
+            width: 16px;
+            height: 60px;
+            background: linear-gradient(90deg, #e8e0c8, #f5f0e0, #e0d8c0);
+            border-radius: 2px;
+        }
+
+        .candle-base {
+            width: 20px;
+            height: 6px;
+            background: var(--gold-dark,#a07820);
+            border-radius: 1px;
+        }
+
+        /* ── STAT RUNES ── */
+        .stat-runes {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+            padding: 40px;
+            border: 1px solid rgba(200,152,42,0.2);
+            background: rgba(0,0,0,0.3);
+        }
+
+        .stat-rune {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'UnifrakturMaguntia', cursive;
+            font-size: 56px;
+            color: var(--gold);
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(200,152,42,0.5);
+        }
+
+        .stat-label {
+            font-family: 'Cinzel', serif;
+            font-size: 10px;
+            color: var(--parchment-dark);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-top: 4px;
+            opacity: 0.6;
+        }
+
+        /* ── FOOTER SEAL ── */
+        .footer-seal {
+            text-align: center;
+            padding: 60px 20px;
+            border-top: 1px solid rgba(200,152,42,0.2);
+            background: linear-gradient(180deg, #0d0500, #000);
+        }
+
+        .seal-symbol {
+            font-size: 60px;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 0 10px rgba(200,152,42,0.5));
+        }
+
+        .footer-text {
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            color: rgba(212,180,131,0.4);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        /* ── MAGIC GLOW PULSE on active section ── */
+        .chapter.visible .chapter-title {
+            animation: chapter-reveal 0.8s ease forwards;
+        }
+
+        @keyframes chapter-reveal {
+            from {
+                opacity: 0;
+                transform: translateY(20px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0d0500;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(200,152,42,0.4);
+            border-radius: 0;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--gold);
+            }
+
+        /* ── RESPONSIVE ── */
+        @media(max-width:600px) {
+            .cover-border {
+                padding: 40px 30px;
+            }
+
+            .scroll-content {
+                padding: 30px 24px;
+            }
+
+            .parchment-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── MAGIC CIRCLE BACKGROUND ── */
+        .magic-circle {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            border: 1px solid rgba(200,152,42,0.04);
+            pointer-events: none;
+            z-index: 0;
+            animation: rotate-slow 60s linear infinite;
+        }
+
+            .magic-circle::before {
+                content: '';
+                position: absolute;
+                inset: 20px;
+                border-radius: 50%;
+                border: 1px solid rgba(139,26,26,0.04);
+            }
+
+            .magic-circle::after {
+                content: '';
+                position: absolute;
+                inset: 50px;
+                border-radius: 50%;
+                border: 1px solid rgba(200,152,42,0.03);
+            }
+
+        @keyframes rotate-slow {
+            from {
+                transform: translate(-50%,-50%) rotate(0)
+            }
+
+            to {
+                transform: translate(-50%,-50%) rotate(360deg)
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="particles"></div>
+    <div class="magic-circle"></div>
+
+    <!-- ══ COVER ══ -->
+    <section class="grimoire-cover" id="top">
+        <span class="sigil" style="top:10%;left:5%;animation-delay:0s">⚗</span>
+        <span class="sigil" style="top:20%;right:8%;animation-delay:1.5s;font-size:30px">☽</span>
+        <span class="sigil" style="bottom:15%;left:12%;animation-delay:3s;font-size:35px">✦</span>
+        <span class="sigil" style="bottom:20%;right:6%;animation-delay:0.8s">⚔</span>
+        <span class="sigil" style="top:50%;left:2%;animation-delay:2s;font-size:24px">𓂀</span>
+        <span class="sigil" style="top:60%;right:3%;animation-delay:4s;font-size:28px">⚜</span>
+
+        <div class="cover-border">
+            <span class="corner corner-tl">❧</span>
+            <span class="corner corner-tr">❧</span>
+            <span class="corner corner-bl">❧</span>
+            <span class="corner corner-br">❧</span>
+
+            <div class="grimoire-subtitle">Tome of Hidden Wisdom</div>
+            <div class="grimoire-title">Гримуар<br>Механических<br>Знаний</div>
+            <div class="rune-divider">⚜ ✦ ⚜</div>
+            <p class="cover-text">
+                Заклятый свиток, хранящий тайны устройства боевых колесниц.<br>
+                Открой сии страницы — и познай магию железа и пара.<br>
+                <em>Да будет свет знаний твоим щитом на экзамене.</em>
+            </p>
+            <a class="scroll-down-btn" href="#knowledge">✦ &nbsp; Открыть Гримуар &nbsp; ✦</a>
+        </div>
+
+        <div class="stat-runes" style="margin-top:40px;border-color:rgba(200,152,42,0.15);background:rgba(0,0,0,0.4);">
+            <div class="stat-rune"><div class="stat-number">58</div><div class="stat-label">Заклинаний</div></div>
+            <div class="stat-rune"><div class="stat-number">8</div><div class="stat-label">Разделов</div></div>
+            <div class="stat-rune"><div class="stat-number">XII</div><div class="stat-label">Свитков</div></div>
+        </div>
+    </section>
+
+    <!-- ══ NAVIGATION ══ -->
+    <nav class="nav-scroll">
+        <button class="nav-item" onclick="scrollToSection('sect-engine')">⚙ Двигатель</button>
+        <button class="nav-item" onclick="scrollToSection('sect-elec')">⚡ Электрика</button>
+        <button class="nav-item" onclick="scrollToSection('sect-trans')">⚔ Трансмиссия</button>
+        <button class="nav-item" onclick="scrollToSection('sect-chassis')">🛡 Ходовая</button>
+        <button class="nav-item" onclick="scrollToSection('sect-steer')">☽ Управление</button>
+    </nav>
+
+    <!-- ══ SEARCH ══ -->
+    <div class="search-section" id="knowledge">
+        <div class="search-inner">
+            <div class="search-label">✦ &nbsp; Взывание к Знаниям &nbsp; ✦</div>
+            <div class="search-vessel">
+                <input type="search" id="searchInput" placeholder="Изречи слово, и свиток найдётся..." oninput="filterCards()">
+                <span class="search-icon">🔮</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ MAIN CONTENT ══ -->
+    <main class="grimoire-pages">
+        <div class="tome-sections">
+
+            <!-- ENGINE -->
+            <div id="sect-engine">
+                <div class="section-divider"><span class="section-name">⚙ Свиток Первый · Двигатель ⚙</span></div>
+                <div class="parchment-grid" id="grid-engine"></div>
+            </div>
+
+            <!-- ELECTRICS -->
+            <div id="sect-elec">
+                <div class="section-divider"><span class="section-name">⚡ Свиток Второй · Электрооборудование ⚡</span></div>
+                <div class="parchment-grid" id="grid-elec"></div>
+            </div>
+
+            <!-- TRANSMISSION -->
+            <div id="sect-trans">
+                <div class="section-divider"><span class="section-name">⚔ Свиток Третий · Трансмиссия ⚔</span></div>
+                <div class="parchment-grid" id="grid-trans"></div>
+            </div>
+
+            <!-- CHASSIS -->
+            <div id="sect-chassis">
+                <div class="section-divider"><span class="section-name">🛡 Свиток Четвёртый · Ходовая Часть 🛡</span></div>
+                <div class="parchment-grid" id="grid-chassis"></div>
+            </div>
+
+            <!-- STEERING -->
+            <div id="sect-steer">
+                <div class="section-divider"><span class="section-name">☽ Свиток Пятый · Механизмы Управления ☽</span></div>
+                <div class="parchment-grid" id="grid-steer"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ══ CANDLES ══ -->
+    <div class="candle-row">
+        <div class="candle"><div class="candle-flame" style="animation-delay:0s"></div><div class="candle-body"></div><div class="candle-base"></div></div>
+        <div class="candle"><div class="candle-flame" style="animation-delay:0.3s"></div><div class="candle-body" style="height:45px"></div><div class="candle-base"></div></div>
+        <div class="candle"><div class="candle-flame" style="animation-delay:0.7s"></div><div class="candle-body" style="height:70px"></div><div class="candle-base"></div></div>
+        <div class="candle"><div class="candle-flame" style="animation-delay:0.2s"></div><div class="candle-body" style="height:50px"></div><div class="candle-base"></div></div>
+        <div class="candle"><div class="candle-flame" style="animation-delay:1s"></div><div class="candle-body"></div><div class="candle-base"></div></div>
+    </div>
+
+    <!-- ══ FOOTER ══ -->
+    <footer class="footer-seal">
+        <div class="seal-symbol">⚜</div>
+        <div class="footer-text">Гримуар Механических Знаний · Anno Domini MMXXV · Составлен по Свиткам Занятий Темы I</div>
+    </footer>
+
+    <!-- ══ SCROLL MODAL ══ -->
+    <div class="scroll-overlay" id="scrollModal" onclick="closeModal(event)">
+        <div class="scroll-content" id="scrollContent">
+            <button class="scroll-close" onclick="closeScrollModal()">✕</button>
+            <div id="modalInner"></div>
+        </div>
+    </div>
+
+    <script>
+// ── DATA ──
+const QA = [
+  {id:1, q:"Общее устройство автомобиля. Преимущества и недостатки капотной и бескапотной компоновки", cat:"engine", rune:"🏰", a:`<p>Автомобиль состоит из: <strong>двигатель, трансмиссия, ходовая часть, механизмы управления, кузов, электрооборудование, специальное оборудование.</strong></p><p><strong>Капотная компоновка</strong> (ЗИЛ-131, УРАЛ-4320): кабина за двигателем.<br>Достоинства: хороший доступ к двигателю, удобный вход/выход, наименьшая нагрузка на передний мост, пассивная безопасность.<br>Недостаток: ограниченная передняя обзорность.</p><p><strong>Бескапотная компоновка</strong> (ГАЗ-66, МАЗ): кабина над двигателем.<br>Достоинства: хорошая обзорность, минимальная база, маневренность.<br>Недостатки: высокий пол, откидывать кабину для обслуживания, большая нагрузка на мост.</p>`},
+  {id:2, q:"Технические характеристики автомобиля ЗИЛ-131", cat:"engine", rune:"⚔", a:`<ul><li><strong>Колёсная формула:</strong> 6×6 (все мосты ведущие)</li><li><strong>Компоновка:</strong> капотная</li><li><strong>Двигатель:</strong> карбюраторный, V8, 4-тактный</li><li><strong>КП:</strong> механическая, 5-ступенчатая</li><li><strong>Раздаточная коробка:</strong> 2-ступенчатая, i₁=2,08; i₂=1,0</li><li><strong>Сцепление:</strong> однодисковое, сухое, механический привод</li><li><strong>Главная передача:</strong> двойная, i=7,33</li><li><strong>Система смазки:</strong> комбинированная, V=9,5 л, P=2–4 кгс/см²</li><li><strong>АКБ:</strong> 6СТ-90ЭМС</li><li><strong>Генератор:</strong> Г-287-Б, 14В, 350/1100Вт</li></ul>`},
+  {id:3, q:"Классификация автомобилей", cat:"engine", rune:"📜", a:`<p><strong>По назначению:</strong> пассажирские (легковые — до 9 чел., автобусы — более 9), грузовые, специальные.</p><p><strong>По проходимости:</strong><br>— Обычной (1–2 ведущих моста, дороги)<br>— Повышенной (все мосты ведущие, бездорожье)<br>— Высокой (4+ мостов, искусственные препятствия)</p><p><strong>Колёсные формулы:</strong> ВАЗ-2101 — 4×2; УАЗ-469 — 4×4; КамАЗ-5320 — 6×4; ЗИЛ-131 — 6×6.</p><p><strong>Группы эксплуатации:</strong> боевая, строевая, транспортная, учебная, НЗ.</p>`},
+  {id:4, q:"Тактико-технические характеристики двигателя ЗИЛ-131", cat:"engine", rune:"⚙", a:`<ul><li>Тип: карбюраторный, 4-тактный, V8</li><li>Смесеобразование: внешнее (карбюратор)</li><li>Воспламенение: от электрической искры</li><li>Компрессия: 6,5–7,5 кгс/см²</li><li>Охлаждение: жидкостное, рабочая t° 85–100°С</li><li>Смазка: комбинированная, 9,5 л, 2–4 кгс/см²</li><li>Питание: с принудительной подачей, внешнее смесеобразование</li></ul>`},
+  {id:5, q:"Рабочий цикл 4-тактного карбюраторного двигателя", cat:"engine", rune:"🔥", a:`<ul><li><strong>Такт 1 — Впуск:</strong> поршень ↓ (ВМТ→НМТ), впускной клапан открыт, горючая смесь входит в цилиндр.</li><li><strong>Такт 2 — Сжатие:</strong> оба клапана закрыты, поршень ↑ (НМТ→ВМТ), смесь сжимается до 6,5–7,5 кгс/см².</li><li><strong>Такт 3 — Рабочий ход:</strong> свеча даёт искру, смесь воспламеняется, газы толкают поршень ↓ — совершается работа.</li><li><strong>Такт 4 — Выпуск:</strong> выпускной клапан открыт, поршень ↑ выталкивает отработавшие газы.</li></ul>`},
+  {id:6, q:"Назначение, устройство и работа КШМ", cat:"engine", rune:"⚙", a:`<p><strong>КШМ</strong> преобразует возвратно-поступательное движение поршней во вращательное движение коленвала.</p><p><strong>Неподвижные:</strong></p><ul><li><strong>Блок цилиндров</strong> — основание; чугун или Al-сплав; рубашка охлаждения + масляные каналы</li><li><strong>Гильза</strong> — направляющая поршня; легированный чугун, зеркальная поверхность</li><li><strong>ГБЦ</strong> — камеры сгорания, клапаны, свечи; крепится через прокладку</li><li><strong>Поддон</strong> — защита снизу + ёмкость для масла</li></ul><p><strong>Подвижные:</strong></p><ul><li><strong>Поршень</strong> — воспринимает давление газов; Al-сплав</li><li><strong>Поршневой палец</strong> — соединяет поршень с шатуном; сталь, пустотелый</li><li><strong>Кольца</strong> — 2 компрессионных + 1 маслосъёмное</li><li><strong>Шатун</strong> — верхняя головка (бронзовая втулка) + стержень + нижняя головка</li><li><strong>Коленвал</strong> — воспринимает усилия шатунов; пятиопорный; каналы смазки</li><li><strong>Маховик</strong> — равномерность вращения КВ</li></ul>`},
+  {id:7, q:"Назначение, устройство и работа ГРМ", cat:"engine", rune:"🌀", a:`<p><strong>ГРМ</strong> — впуск горючей смеси и выпуск отработавших газов в нужной последовательности.</p><ul><li><strong>Привод</strong> — от шестерни КВ (ЗИЛ-131); цепи (ВАЗ); ремня (ВАЗ-2105)</li><li><strong>Распредвал</strong> — своевременно открывает клапаны; кулачки, опорные шейки, эксцентрик насоса</li><li><strong>Толкатели</strong> — от кулачков к штангам</li><li><strong>Штанги</strong> — от толкателей к коромыслам</li><li><strong>Коромысла</strong> — неравноплечий рычаг; передают усилие к клапанам</li><li><strong>Клапаны</strong> — жаростойкая сталь; открывают/закрывают каналы</li><li><strong>Клапанные пружины</strong> — плотное закрытие клапанов</li></ul>`},
+  {id:8, q:"Неисправности КШМ и ГРМ", cat:"engine", rune:"💀", a:`<p><strong>КШМ:</strong></p><ul><li>Звонкий стук холодного двигателя → износ поршня и цилиндра</li><li>Резкий стук на всех режимах → увеличение зазора поршневого пальца</li><li>Глухой стук при резком увеличении оборотов → износ вкладышей коренных/шатунных подшипников</li><li>Падение мощности, дым, расход масла → снижение компрессии</li></ul><p><strong>ГРМ:</strong></p><ul><li>Снижение компрессии → плохое прилегание клапанов (нагар, раковины)</li><li>Хлопки в трубопроводах → неполное открытие клапанов</li><li>Стуки и падение мощности → большой зазор клапан–коромысло</li></ul>`},
+  {id:9, q:"Техническое обслуживание КШМ и ГРМ", cat:"engine", rune:"🔧", a:`<p><strong>ТО КШМ:</strong></p><ul><li>КО: осмотр и прослушивание двигателя</li><li>ЕТО: очистка от пыли и грязи</li><li>ТО-1: проверка крепления двигателя к раме</li><li>ТО-2: крепление ГБЦ, проверка компрессии и давления масла; очистка камер сгорания</li></ul><p><strong>ТО ГРМ:</strong></p><ul><li>КО: осмотр и прослушивание</li><li>ТО-1: крепление крышек</li><li>ТО-2: проверка и регулировка зазоров клапанов</li></ul>`},
+  {id:10, q:"Назначение, устройство и работа системы охлаждения", cat:"engine", rune:"❄", a:`<p><strong>Назначение:</strong> поддержание t° ОЖ 85–100°С; отвод лишнего тепла.</p><p><strong>Тип (ЗИЛ-131):</strong> жидкостная, закрытая, с принудительной циркуляцией.</p><ul><li><strong>Водяной насос</strong> — принудительная циркуляция ОЖ</li><li><strong>Радиатор</strong> — отвод тепла в атмосферу</li><li><strong>Термостат</strong> — ускорение прогрева и регулировка потока через радиатор</li><li><strong>Вентилятор</strong> — создаёт поток воздуха через радиатор</li><li><strong>Пробка радиатора</strong> — паровой клапан (0,2–0,7 кгс/см²) + воздушный (0,01–0,1 кгс/см²)</li><li><strong>Масляный радиатор</strong> — охлаждение моторного масла; постоянно включён (отключать только при пуске в мороз)</li></ul><p><strong>Антифризы:</strong> «40» (светло-жёлтый) и «65» (оранжевый) — раствор этиленгликоля. Ядовиты!</p>`},
+  {id:11, q:"Назначение, устройство и работа системы смазки", cat:"engine", rune:"⚗", a:`<p><strong>Назначение:</strong> снижение трения, износа, частичное охлаждение, удаление продуктов износа, защита от коррозии.</p><p><strong>Тип (ЗИЛ-131):</strong> комбинированная. V=9,5 л. P=2–4 кгс/см².</p><ul><li><strong>Маслоприёмник</strong> — забирает масло из поддона</li><li><strong>Двухсекционный насос</strong> — нагнетает масло</li><li><strong>Центрифуга (фильтр)</strong> — 5000–6000 об/мин; вращается 2–3 мин после остановки</li><li><strong>Масляные магистрали</strong> — левый и правый продольные каналы</li><li><strong>Масляный радиатор</strong> — воздушного охлаждения; перед радиатором охлаждения</li></ul>`},
+  {id:12, q:"Назначение, устройство и работа системы питания", cat:"engine", rune:"🌾", a:`<p><strong>Назначение:</strong> хранение, очистка, приготовление горючей смеси, подача в цилиндры, отвод газов.</p><p><strong>Тип (ЗИЛ-131):</strong> с принудительной подачей, внешнее смесеобразование.</p><ul><li><strong>Воздухоочиститель (ВПМ-3)</strong> — инерционно-масляный, 3-ступенчатый</li><li><strong>Топливный бак → фильтр-отстойник → насос → фильтр тонкой очистки → карбюратор</strong></li><li><strong>Карбюратор</strong> — приготовление горючей смеси</li><li><strong>Выпускной коллектор → трубы → глушитель</strong></li></ul>`},
+  {id:13, q:"Режимы работы двигателя и составы горючей смеси", cat:"engine", rune:"🔥", a:`<ul><li><strong>Пуск холодного</strong> — очень богатая (α≪1): воздушная заслонка прикрыта</li><li><strong>Холостой ход</strong> — богатая, малые обороты</li><li><strong>Частичные нагрузки</strong> — обеднённая (α>1): экономичный режим</li><li><strong>Полная нагрузка</strong> — богатая (α≈0,85–0,9): максимальная мощность</li><li><strong>Переходные режимы</strong> — обогащение через ускорительный насос карбюратора</li></ul>`},
+  {id:14, q:"Неисправности системы смазки", cat:"engine", rune:"💧", a:`<ul><li>Падение давления масла → мало масла, износ насоса, засорение фильтра, износ подшипников</li><li>Повышенный расход масла → износ ЦПГ, сальников</li><li>Загрязнение масла (вода) → нарушение уплотнения ГБЦ</li><li>Течь масла → износ прокладок и сальников</li></ul>`},
+  {id:15, q:"Техническое обслуживание системы смазки", cat:"engine", rune:"🔧", a:`<ul><li><strong>КО:</strong> уровень масла, нет течи</li><li><strong>ЕТО:</strong> дозаправка при необходимости</li><li><strong>ТО-1:</strong> промывка фильтра вентиляции картера; крепление приборов</li><li><strong>ТО-2:</strong> очистка центрифуги или смена фильтрэлемента; замена масла</li><li><strong>СО:</strong> замена масла на сезонный сорт; включить/отключить масляный радиатор</li></ul>`},
+  {id:16, q:"Неисправности системы питания", cat:"engine", rune:"⚠", a:`<ul><li>Двигатель не заводится / неустойчивая работа → засорение фильтров, неисправность насоса, разрегулирован карбюратор</li><li>Повышенный расход топлива → богатая смесь (засорён воздушный фильтр)</li><li>Бедная смесь → засорены жиклёры карбюратора</li><li>Течь топлива → повреждение топливопроводов или прокладок</li></ul>`},
+  {id:17, q:"Техническое обслуживание системы питания", cat:"engine", rune:"🔧", a:`<ul><li><strong>КО/ЕТО:</strong> нет подтеканий топлива</li><li><strong>ТО-1:</strong> слив отстоя из фильтра; проверка крепления</li><li><strong>ТО-2:</strong> промывка фильтров; промывка воздухоочистителя, смена масла в ванне; регулировка карбюратора</li></ul>`},
+  {id:18, q:"Назначение, устройство и работа АКБ", cat:"elec", rune:"⚡", a:`<p><strong>Назначение АКБ:</strong> пуск двигателя стартером; питание потребителей при неработающем двигателе; питание при перегрузке генератора.</p><p><strong>ЗИЛ-131:</strong> 6СТ-90ЭМС (6 акк., стартерная, 90 Ач, моноблок — эбонит, сепаратор — мипласт + стекловолокно).</p><p><strong>Устройство:</strong> 6 аккумуляторов в моноблоке. Каждый: (+) пластины (PbO₂), (−) пластины (Pb губчатый; их на 1 больше), сепараторы, электролит H₂SO₄.</p><p><strong>Работа:</strong> разряд → плотность падает до 1,11 г/см³; заряд → плотность 1,26 г/см³ (при 15°С).</p>`},
+  {id:19, q:"Назначение, устройство и работа генераторной установки", cat:"elec", rune:"⚡", a:`<p><strong>Назначение:</strong> основной источник электроэнергии при работающем двигателе; зарядка АКБ.</p><p><strong>Состав:</strong> генератор Г-287-Б + реле-регулятор РР-132.</p><p><strong>Параметры (ЗИЛ-131):</strong> переменный ток, трёхфазный; 14В; 350–1100Вт; 28А.</p><p><strong>Устройство генератора:</strong></p><ul><li><strong>Статор</strong> — обмотки, вырабатывающие ток</li><li><strong>Ротор</strong> — обмотка возбуждения</li><li><strong>Выпрямительный блок</strong> — AC→DC</li><li><strong>Щёткодержатель</strong> — подвод тока к ротору</li></ul><p><strong>Реле-регулятор</strong> — поддерживает напряжение 13,8–14,0В.</p>`},
+  {id:20, q:"Назначение, устройство контактно-транзисторной системы зажигания", cat:"elec", rune:"✨", a:`<p><strong>Назначение:</strong> воспламенение рабочей смеси в строго определённые моменты.</p><p><strong>Первичная цепь (низкое напряжение):</strong> АКБ → выключатель зажигания → первичная обмотка катушки → прерыватель → конденсатор → провода.</p><p><strong>Вторичная цепь (высокое: 15000–30000В):</strong> вторичная обмотка катушки → распределитель → свечи → провода.</p><p><strong>Отличие от контактной:</strong> в контактно-транзисторной системе прерыватель управляет транзистором, а уже транзистор разрывает ток первичной обмотки — снижается износ контактов и увеличивается ток искры.</p><p><strong>Катушка:</strong> неразборная, герметичная, 2/3 заполнена трансформаторным маслом; первичная — 200–300 витков (Ø 0,6–0,9 мм); вторичная — 20–30 тыс. витков (Ø 0,06–0,09 мм).</p>`},
+  {id:21, q:"Назначение, устройство бесконтактной транзисторной системы зажигания", cat:"elec", rune:"✨", a:`<p><strong>Отличие от контактной:</strong> нет механического прерывателя — вместо него датчик-распределитель (бесконтактный).</p><p><strong>Состав:</strong> датчик-распределитель, коммутатор, катушка зажигания, замок зажигания, свечи, провода.</p><p><strong>Принцип:</strong> датчик Холла или индукционный датчик формирует электрический сигнал → коммутатор прерывает ток первичной обмотки → во вторичной наводится высокое напряжение → искра на свече.</p><p><strong>Преимущества:</strong> нет контактного износа, стабильная искра, возможна работа на высоких оборотах.</p>`},
+  {id:22, q:"Неисправности АКБ и причины их возникновения", cat:"elec", rune:"💀", a:`<ul><li><strong>Сульфатация электродов</strong> — хранение в разряженном состоянии, систематический перезаряд</li><li><strong>Повышенный саморазряд</strong> — загрязнённая поверхность, дефекты пластин</li><li><strong>Трещины в мастике и моноблоке</strong> — механические повреждения</li><li><strong>Повреждение полюсных выводов</strong> — короткое замыкание, неаккуратное обслуживание</li><li><strong>КЗ внутри аккумулятора</strong> — разрушение сепараторов</li><li><strong>Отстающие аккумуляторы</strong> — неравномерный разряд</li></ul>`},
+  {id:23, q:"Техническое обслуживание АКБ", cat:"elec", rune:"🔧", a:`<ul><li><strong>ЕТО:</strong> очистить, проверить крепление и контакты</li><li><strong>ТО-1</strong> (летом каждые 15 дней, зимой — ежемесячно): крепление, вентиляция, уровень электролита (долить дистиллированную воду), нейтрализация 10% раствором соды</li><li><strong>ТО-2</strong> (летом раз в 3 мес., зимой — ежемесячно): ТО-1 + замер плотности электролита, полный заряд при необходимости; проверка напряжения генераторной установки</li></ul>`},
+  {id:24, q:"Неисправности генераторной установки", cat:"elec", rune:"⚠", a:`<ul><li>Отсутствует зарядный ток → слабое натяжение ремня, износ щёток, обрыв/КЗ обмоток</li><li>Слишком большой зарядный ток при заряженной АКБ → отказ или нарушение регулировки реле-регулятора</li></ul>`},
+  {id:25, q:"Техническое обслуживание генераторной установки", cat:"elec", rune:"🔧", a:`<ul><li><strong>ТО-1:</strong> натяжение ремня привода (прогиб 8–14 мм при усилии 3–4 кгс)</li><li><strong>ТО-2:</strong> проверить напряжение генератора; крепление проводов; затяжку болтов и гайки шкива</li></ul>`},
+  {id:26, q:"Неисправности системы зажигания", cat:"elec", rune:"⚠", a:`<p>Система зажигания исправна, если искра пробивает зазор 6–7 мм.</p><ul><li><strong>Нет искры</strong> → неисправна катушка, обрыв в цепи, выход из строя прерывателя/коммутатора</li><li><strong>Искра с перебоями</strong> → износ контактов прерывателя, загрязнение крышки распределителя, неисправная свеча</li><li><strong>Нарушен момент зажигания</strong> → нарушена регулировка октан-корректора или регуляторов опережения</li></ul>`},
+  {id:27, q:"Техническое обслуживание приборов системы электропуска", cat:"elec", rune:"🔧", a:`<ul><li><strong>ТО-2:</strong> проверить крепление стартера; затяжку контактных соединений рабочей цепи; состояние коллектора и щёток (протереть ветошью в бензине)</li><li>Раз в год при ТО-2: снять стартер, продуть сжатым воздухом, проверить регулировку; заменить щётки, если высота менее допустимой</li></ul>`},
+  {id:30, q:"Неисправности системы электропуска и их причины", cat:"elec", rune:"💀", a:`<ul><li>Система не действует → обрыв/плохой контакт в цепях; неработоспособность АКБ; отказ электродвигателя стартера</li><li>Стартер не развивает мощность → неисправна АКБ; плохой контакт; пробуксовка муфты; задевание якоря</li><li>Шум при включении → слабое закрепление стартера; разряженная АКБ; нарушена регулировка; износ шестерён</li><li>Система не выключается → заедание привода; спекание контактов реле</li></ul>`},
+  {id:34, q:"Назначение, устройство и работа сцепления автомобиля ЗИЛ-131", cat:"trans", rune:"⚙", a:`<p><strong>Назначение:</strong> передача крутящего момента к КП; кратковременное отсоединение; плавное соединение; защита от перегрузок; гашение крутильных колебаний.</p><p><strong>Характеристика:</strong> фрикционное, однодисковое, сухое, с периферийным расположением пружин, с демпфером, с механическим приводом.</p><p><strong>Состав:</strong></p><ul><li><strong>Ведущие:</strong> маховик, кожух, нажимной диск</li><li><strong>Ведомые:</strong> ведомый диск с накладками и демпфером</li><li><strong>Нажимное устройство:</strong> 16 пружин</li><li><strong>Механизм выключения:</strong> 4 рычага, 8 осей, муфта с упорным подшипником</li></ul><p><strong>Привод:</strong> механический — педаль → вал → рычаг → тяга → вилка → муфта.</p>`},
+  {id:35, q:"Назначение, устройство и работа коробки передач ЗИЛ-131", cat:"trans", rune:"⚔", a:`<p><strong>Назначение:</strong> изменение крутящего момента по величине и направлению; отключение двигателя от колёс.</p><p><strong>КП ЗИЛ-131:</strong> механическая, трёхвальная, 5-ступенчатая (5 вперёд + 1 назад), 2 синхронизатора (2–3 и 4–5 передачи).</p><ul><li>Картер с крышкой</li><li>Первичный, промежуточный, вторичный валы с шестернями и подшипниками</li><li>Блок шестерён заднего хода</li><li>Механизм переключения</li></ul><p><strong>Синхронизаторы</strong> — бесшумное безударное включение: сначала выравниваются угловые скорости вала и шестерни.</p>`},
+  {id:36, q:"Назначение, устройство и работа раздаточной коробки ЗИЛ-131", cat:"trans", rune:"⚙", a:`<p><strong>Назначение:</strong> увеличение момента и распределение по ведущим мостам.</p><p><strong>РК ЗИЛ-131:</strong> 2-ступенчатая; i₁=2,08; i₂=1,0; масло ТАп-15В — 3,3 л; электропневматическое вкл. переднего моста.</p><ul><li>Картер, первичный вал, вал мостов задней тележки</li><li>Вал переднего моста с шестернями и муфтами</li><li>Механизм переключения</li><li>Система управления передним мостом</li></ul><p><strong>4 режима:</strong> 1) отбор мощности; 2) 2-я без переднего; 3) 2-я с передним; 4) 1-я передача.</p>`},
+  {id:37, q:"Назначение и работа карданной передачи ЗИЛ-131", cat:"trans", rune:"🌀", a:`<p><strong>Назначение:</strong> передача момента между несоосными валами при изменяющемся взаимном положении.</p><p><strong>Карданный вал:</strong> тонкостенная труба; на концах — вилка (приварена) и шлицованная втулка со скользящей вилкой (изменение длины).</p><p><strong>Карданный шарнир:</strong> 2 вилки + крестовина + 4 игольчатых подшипника со стаканами.</p><p><strong>ШРУСы</strong> (шарниры равных угловых скоростей) — привод передних управляемых колёс; угол до 35–40°. Типы: шариковые и кулачковые.</p>`},
+  {id:38, q:"Назначение и устройство механизмов ведущих мостов ЗИЛ-131", cat:"trans", rune:"⚔", a:`<p><strong>Главная передача (ЗИЛ-131):</strong> двойная — коническая (спиральные зубья) + цилиндрическая (косые зубья); i=7,33. Постоянное увеличение момента и передача на полуоси под прямым углом.</p><p><strong>Дифференциал:</strong> конический симметричный. Состав: 2 чашки, крестовина, 4 сателлита, 2 полуосевые шестерни. Позволяет колёсам вращаться с разной скоростью.</p><p><strong>Полуоси:</strong> передают момент от дифференциала к колёсам. Полуоси переднего моста — со ШРУСами.</p>`},
+  {id:39, q:"Неисправности сцепления", cat:"trans", rune:"⚠", a:`<ul><li><strong>Пробуксовывает:</strong> нет свободного хода педали; износ накладок; замасливание; ослабление пружин</li><li><strong>«Ведёт»:</strong> большой свободный ход; коробление диска; обрыв накладок; перекос нажимного диска</li><li><strong>Резкое включение:</strong> заедание муфты; износ шлицев первичного вала</li><li><strong>Шум при выключении:</strong> разрушение упорного подшипника муфты</li></ul>`},
+  {id:40, q:"Техническое обслуживание сцепления", cat:"trans", rune:"🔧", a:`<ul><li><strong>КО:</strong> работа сцепления в движении</li><li><strong>ЕТО:</strong> очистка и мойка картера</li><li><strong>ТО-1:</strong> регулировка свободного хода педали (ЗИЛ-131: 35–50 мм); прокачка гидропривода; смазка подшипника муфты</li><li><strong>СО:</strong> замена тормозной жидкости в гидроприводе</li></ul>`},
+  {id:41, q:"Неисправности КП и раздаточной коробки", cat:"trans", rune:"💀", a:`<ul><li>Шум при работе → износ шестерён/подшипников; мало масла</li><li>Шум при включении передач → нарушение регулировки сцепления</li><li>Нагрев, течь масла → износ прокладок и сальников</li><li>Затруднённое включение передач → забоины на шлицах, нарушение синхронизаторов</li><li>Самопроизвольное выключение → сильный износ зубьев шестерён</li></ul>`},
+  {id:44, q:"Неисправности механизмов ведущих мостов", cat:"trans", rune:"⚠", a:`<ul><li>Повышенный шум → смещение пятна контакта; зазор в подшипниках; износ зубьев; мало масла</li><li>Стуки/хруст → выкрашивание зубьев; разрушение ШРУСа</li><li>Течь смазки → износ сальников; повышенный уровень масла; ослабление крышек</li></ul>`},
+  {id:46, q:"Назначение, устройство ходовой части (рама, балки мостов)", cat:"chassis", rune:"🏰", a:`<p><strong>Ходовая часть:</strong> поступательное движение, смягчение толчков. Состав: рама, оси, подвеска, колёса.</p><p><strong>Рама (ЗИЛ-131):</strong> лонжеронная — 2 продольных лонжерона + поперечины (заклёпки или сварка). Несущая система: воспринимает все нагрузки; основание для двигателя, агрегатов, кузова.</p><p><strong>Балки мостов:</strong> воспринимают вертикальные, продольные, поперечные усилия. Ведущие мосты — пустотелые (внутри ГП, дифференциал, полуоси). У ЗИЛ-131: штампованные сварные половины; кронштейны рессор и реактивных штанг.</p>`},
+  {id:47, q:"Подвеска и колёса автомобиля ЗИЛ-131", cat:"chassis", rune:"🛡", a:`<p><strong>Подвеска:</strong> плавность хода, поглощение динамических нагрузок. Элементы: направляющий (рычаги/тяги), упругий (рессоры), гасящий (амортизаторы).</p><p><strong>Передняя:</strong> 2 продольных рессоры + 2 телескопических амортизатора. Передний конец рессоры закреплён в кронштейне рамы, задний — скользит.</p><p><strong>Задняя:</strong> балансирная, на 2 рессорах с реактивными тягами. Рессоры крепятся стремянками к ступице оси балансира.</p><p><strong>Колёса:</strong> дисковые (диск + обод + бортовое кольцо + замочное кольцо + шина). Шины: камерные/бескамерные; диагональные (30–40 тыс. км) / радиальные (60–70 тыс. км).</p>`},
+  {id:48, q:"Работа амортизатора", cat:"chassis", rune:"💧", a:`<p><strong>Тип:</strong> гидравлический, телескопический, двустороннего действия.</p><p><strong>Назначение:</strong> быстрое гашение колебаний рамы и кузова.</p><p><strong>Принцип:</strong> при сжатии/растяжении подвески жидкость дросселируется через калиброванные отверстия клапанов — возникает сила сопротивления, гасящая колебания. Двустороннего действия = работает и при сжатии, и при отбое.</p>`},
+  {id:49, q:"Неисправности подвесок автомобиля", cat:"chassis", rune:"⚠", a:`<ul><li>Повышенная жёсткость → поломка листов рессор; утечка жидкости из амортизатора</li><li>Крен автомобиля → осадка рессор с одной стороны; неисправный амортизатор</li><li>Стуки в подвеске → износ втулок рессор, пальцев шарниров, разрушение буферов</li><li>Пробои подвески → неисправны амортизаторы; поломка листов рессор</li></ul>`},
+  {id:50, q:"Техническое обслуживание подвесок", cat:"chassis", rune:"🔧", a:`<ul><li><strong>КО:</strong> нет деформаций рессор и трещин</li><li><strong>ЕТО:</strong> очистка от грязи</li><li><strong>ТО-1:</strong> проверка крепления рессор, амортизаторов; смазка пальцев рессор</li><li><strong>ТО-2:</strong> проверка состояния листов рессор; проверка амортизаторов на утечку жидкости</li></ul>`},
+  {id:52, q:"Назначение, устройство и работа рулевого управления ЗИЛ-131", cat:"steer", rune:"☽", a:`<p><strong>Назначение:</strong> поворот управляемых колёс. Состав: рулевой механизм + рулевой привод + усилитель.</p><p><strong>Рулевой механизм:</strong> картер, винт, шариковая гайка, поршень-рейка, зубчатый сектор. Увеличивает усилие водителя.</p><p><strong>Рулевой привод:</strong> механизм → сошка → карданный вал → рулевая трапеция (поперечная тяга + поворотные кулаки).</p><p><strong>Гидроусилитель (ЗИЛ-131):</strong> масляный насос с бачком + распределительный клапан + силовой цилиндр + радиатор + трубопроводы. P=65–70 кгс/см². Жидкость «Р».</p><p><strong>Установочные параметры (ЗИЛ-131):</strong> развал колёс = 1°; схождение = 2–5 мм.</p>`},
+  {id:53, q:"Назначение, устройство и работа тормозной системы ЗИЛ-131", cat:"steer", rune:"🛡", a:`<p><strong>Виды ТС:</strong> рабочая (плавная остановка), запасная (при отказе рабочей), стояночная (удержание), вспомогательная (длительные спуски).</p><p><strong>Каждая ТС:</strong> тормозной механизм + тормозной привод.</p><p><strong>Рабочая ТС (ЗИЛ-131):</strong> пневматический привод → педаль → тормозной кран → ресиверы → тормозные камеры → разжимные кулаки → колодки → барабан.</p>`},
+  {id:54, q:"Назначение и устройство стояночного тормоза ЗИЛ-131", cat:"steer", rune:"🔒", a:`<p><strong>Назначение:</strong> удержание автомобиля на стоянке. При движении — только в аварийных случаях (отказ рабочей ТС).</p><p><strong>Состав:</strong></p><ul><li>Трансмиссионный тормозной механизм (действует на карданный вал)</li><li>Механический привод (ручной рычаг в кабине)</li></ul>`},
+  {id:55, q:"Основные неисправности рулевого управления", cat:"steer", rune:"⚠", a:`<ul><li>Увеличенный свободный ход руля → износ шарниров привода; ослабление гаек крепления механизма</li><li>Тяжёлое управление → мало масла в ГУР; слабое натяжение ремня насоса; засорение фильтра</li><li>Тянет в сторону → нарушение углов установки колёс; разное давление в шинах</li><li>Стуки в механизме → износ деталей</li></ul>`},
+  {id:56, q:"Неисправности тормозных систем", cat:"steer", rune:"💀", a:`<ul><li>Недостаточная эффективность → износ накладок; масло/влага на накладках; мало давления воздуха</li><li>Неравномерное торможение → загрязнение накладок одного колеса</li><li>Самоторможение → заедание механизмов; засорение трубопроводов</li><li>Недостаточное давление → неисправность компрессора; утечки</li></ul>`},
+  {id:57, q:"Техническое обслуживание рулевого управления", cat:"steer", rune:"🔧", a:`<ul><li><strong>КО/ЕТО:</strong> нет утечек масла ГУР; проверка люфта рулевого колеса</li><li><strong>ТО-1:</strong> натяжение ремня насоса ГУР; крепление картера механизма; смазка шарниров привода</li><li><strong>ТО-2:</strong> проверка углов установки колёс (развал, схождение); регулировка рулевого механизма; смена масла в ГУР</li></ul>`},
+  {id:58, q:"Техническое обслуживание тормозной системы", cat:"steer", rune:"🔧", a:`<ul><li><strong>КО:</strong> проверка давления воздуха; нет утечек</li><li><strong>ЕТО:</strong> слив конденсата из ресиверов</li><li><strong>ТО-1:</strong> крепление тормозных камер и трубопроводов; регулировка свободного хода педали</li><li><strong>ТО-2:</strong> проверка и регулировка зазора в тормозных механизмах; проверка регулятора давления</li></ul>`}
+];
+
+const CATS = {
+  engine: {grid:'grid-engine', name:'Двигатель'},
+  elec:   {grid:'grid-elec',   name:'Электрооборудование'},
+  trans:  {grid:'grid-trans',  name:'Трансмиссия'},
+  chassis:{grid:'grid-chassis',name:'Ходовая часть'},
+  steer:  {grid:'grid-steer',  name:'Управление'}
+};
+
+let currentIdx = 0;
+let filteredQA = [...QA];
+
+function renderAll(data) {
+  Object.keys(CATS).forEach(cat => {
+    document.getElementById(CATS[cat].grid).innerHTML = '';
+  });
+  data.forEach((q, i) => {
+    const cat = CATS[q.cat] || CATS.engine;
+    const grid = document.getElementById(cat.grid);
+    if (!grid) return;
+    const card = document.createElement('div');
+    card.className = 'tome-card';
+    card.setAttribute('data-idx', QA.indexOf(q));
+    card.innerHTML = `
+      <div class="card-rune">${q.rune||'📜'}</div>
+      <div class="card-number">${romanize(q.id)}</div>
+      <div class="card-title">${q.q}</div>
+      <div class="card-excerpt">${q.a.replace(/<[^>]+>/g,' ').substring(0,120)}…</div>
+      <button class="card-open-btn">✦ Открыть свиток ✦</button>
+    `;
+    card.onclick = () => openModal(QA.indexOf(q));
+    grid.appendChild(card);
+  });
+}
+
+function romanize(n) {
+  const map = [[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']];
+  let r='';
+  for(let[val,sym] of map){while(n>=val){r+=sym;n-=val;}}
+  return r;
+}
+
+function openModal(idx) {
+  currentIdx = idx;
+  const q = QA[idx];
+  const fi = filteredQA.indexOf(q);
+  const total = QA.length;
+  document.getElementById('modalInner').innerHTML = `
+    <div class="scroll-q-num">${romanize(q.id)}</div>
+    <div class="scroll-q-title">${q.q}</div>
+    <hr class="scroll-divider">
+    <div class="scroll-answer">${q.a}</div>
+    <div class="scroll-nav">
+      ${idx > 0 ? `<button class="scroll-nav-btn" onclick="openModal(${idx-1})">← Предыдущий</button>` : ''}
+      ${idx < QA.length-1 ? `<button class="scroll-nav-btn" onclick="openModal(${idx+1})">Следующий →</button>` : ''}
+      <button class="scroll-nav-btn" onclick="closeScrollModal()">✕ Закрыть</button>
+    </div>
+  `;
+  document.getElementById('scrollModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeScrollModal() {
+  document.getElementById('scrollModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('scrollModal')) closeScrollModal();
+}
+
+function filterCards() {
+  const s = document.getElementById('searchInput').value.toLowerCase().trim();
+  filteredQA = s ? QA.filter(q => q.q.toLowerCase().includes(s) || q.a.replace(/<[^>]+>/g,' ').toLowerCase().includes(s)) : [...QA];
+  renderAll(filteredQA);
+}
+
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ── PARTICLES ──
+function createParticles() {
+  const container = document.getElementById('particles');
+  const colors = ['#ffd700','#ff6b00','#c8982a','#8b1a1a','#c084fc','#60a5fa'];
+  for(let i=0;i<60;i++){
+    const s=document.createElement('div');
+    s.className='spark';
+    const size = Math.random()*4+1;
+    const color = colors[Math.floor(Math.random()*colors.length)];
+    const dur = Math.random()*15+8;
+    const delay = Math.random()*20;
+    const dx = (Math.random()-0.5)*400+'px';
+    s.style.cssText=`
+      width:${size}px;height:${size}px;
+      background:${color};
+      left:${Math.random()*100}%;
+      animation-duration:${dur}s;
+      animation-delay:-${delay}s;
+      --dx:${dx};
+      box-shadow:0 0 ${size*3}px ${color};
+    `;
+    container.appendChild(s);
+  }
+}
+
+// ── KEYBOARD NAV ──
+document.addEventListener('keydown',e=>{
+  const m=document.getElementById('scrollModal');
+  if(!m.classList.contains('open')) return;
+  if(e.key==='Escape') closeScrollModal();
+  if(e.key==='ArrowRight'&&currentIdx<QA.length-1) openModal(currentIdx+1);
+  if(e.key==='ArrowLeft'&&currentIdx>0) openModal(currentIdx-1);
+});
+
+// ── INIT ──
+renderAll(QA);
+createParticles();
+    </script>
+</body>
+</html>
